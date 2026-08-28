@@ -38,33 +38,6 @@ src/
 - **Personas** (`/personas`): alta, edición, baja y búsqueda de personas.
 - **Historial por persona** (`/personas/:id/historial`): todas las visitas de
   una persona específica.
-
-## ⚠️ Nota sobre el backend
-
-Al mapear los DTOs encontré un detalle en `PersonEndpoint.cs` que probablemente
-quieras corregir: el grupo de rutas ya usa el prefijo `/api/persons`
-
-```csharp
-var group = app.MapGroup("/api/persons").WithTags("Persons");
-...
-group.MapPost("/api/persons", async (CreatePersonDTO request, ...) => { ... });
-```
-
-Esto hace que la ruta real para crear una persona quede en
-`/api/persons/api/persons`, no en `/api/persons` como muestran tu `WebApi.http`
-y como espera este frontend. Te recomiendo cambiar esa línea a:
-
-```csharp
-group.MapPost("/", async (CreatePersonDTO request, ...) => { ... });
-```
-
-(igual que ya hacen el resto de los endpoints del grupo). Mientras no se
-corrija, el alta de personas desde este frontend devolverá 404.
-
-También ten en cuenta que `CreatePersonDTO` y `UpdatePersonDTO` usan la
-propiedad `firtsName` (con el typo tal cual está en tu código) — el frontend
-ya envía ese nombre de campo para que coincida.
-
 ## Variables de entorno
 
 | Variable        | Descripción                          | Default                  |
