@@ -1,33 +1,49 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-const EMPTY = { code: '', firstName: '', lastName: '', email: '', phoneNumber: '' }
+const EMPTY = {
+  code: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+};
 
-export default function PersonForm({ initial, isEdit = false, onSubmit, onCancel, submitting }) {
-  const [values, setValues] = useState(() => ({ ...EMPTY, ...initial }))
-  const [errors, setErrors] = useState({})
+export default function PersonForm({
+  initial,
+  isEdit = false,
+  onSubmit,
+  onCancel,
+  submitting,
+}) {
+  const [values, setValues] = useState(() => ({ ...EMPTY, ...initial }));
+  const [errors, setErrors] = useState({});
 
   function set(field, value) {
-    setValues((v) => ({ ...v, [field]: value }))
+    setValues((v) => ({ ...v, [field]: value }));
   }
 
   function validate() {
-    const next = {}
+    const next = {};
     if (!isEdit) {
-      if (values.code.trim().length < 3) next.code = 'Mínimo 3 caracteres'
-      if (values.code.trim().length > 20) next.code = 'Máximo 20 caracteres'
+      if (values.code.trim().length < 3) next.code = "Mínimo 3 caracteres";
+      if (values.code.trim().length > 20) next.code = "Máximo 20 caracteres";
     }
-    if (values.firstName.trim().length < 2) next.firstName = 'Mínimo 2 caracteres'
-    if (values.lastName.trim().length < 2) next.lastName = 'Mínimo 2 caracteres'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) next.email = 'Correo inválido'
-    if (values.phoneNumber.trim().length !== 10) next.phoneNumber = 'Debe tener 10 dígitos'
-    setErrors(next)
-    return Object.keys(next).length === 0
+    if (values.firstName.trim().length < 2)
+      next.firstName = "Mínimo 2 caracteres";
+    if (values.lastName.trim().length < 2)
+      next.lastName = "Mínimo 2 caracteres";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
+      next.email = "Correo inválido";
+    if (values.phoneNumber.trim().length !== 10)
+      next.phoneNumber = "Debe tener 10 dígitos";
+    setErrors(next);
+    return Object.keys(next).length === 0;
   }
 
   function handleSubmit(e) {
-    e.preventDefault()
-    if (!validate()) return
-    onSubmit(values)
+    e.preventDefault();
+    if (!validate()) return;
+    onSubmit(values);
   }
 
   return (
@@ -38,11 +54,13 @@ export default function PersonForm({ initial, isEdit = false, onSubmit, onCancel
           <input
             className="field-input font-mono"
             value={values.code}
-            onChange={(e) => set('code', e.target.value)}
+            onChange={(e) => set("code", e.target.value)}
             placeholder="Ej. 12345678"
             autoFocus
           />
-          {errors.code && <p className="text-xs text-stamp-alert mt-1">{errors.code}</p>}
+          {errors.code && (
+            <p className="text-xs text-stamp-alert mt-1">{errors.code}</p>
+          )}
         </div>
       )}
 
@@ -52,14 +70,22 @@ export default function PersonForm({ initial, isEdit = false, onSubmit, onCancel
           <input
             className="field-input"
             value={values.firstName}
-            onChange={(e) => set('firstName', e.target.value)}
+            onChange={(e) => set("firstName", e.target.value.toUpperCase())}
           />
-          {errors.firstName && <p className="text-xs text-stamp-alert mt-1">{errors.firstName}</p>}
+          {errors.firstName && (
+            <p className="text-xs text-stamp-alert mt-1">{errors.firstName}</p>
+          )}
         </div>
         <div>
           <label className="field-label">Apellido</label>
-          <input className="field-input" value={values.lastName} onChange={(e) => set('lastName', e.target.value)} />
-          {errors.lastName && <p className="text-xs text-stamp-alert mt-1">{errors.lastName}</p>}
+          <input
+            className="field-input"
+            value={values.lastName}
+            onChange={(e) => set("lastName", e.target.value.toUpperCase())}
+          />
+          {errors.lastName && (
+            <p className="text-xs text-stamp-alert mt-1">{errors.lastName}</p>
+          )}
         </div>
       </div>
 
@@ -69,9 +95,11 @@ export default function PersonForm({ initial, isEdit = false, onSubmit, onCancel
           type="email"
           className="field-input"
           value={values.email}
-          onChange={(e) => set('email', e.target.value)}
+          onChange={(e) => set("email", e.target.value)}
         />
-        {errors.email && <p className="text-xs text-stamp-alert mt-1">{errors.email}</p>}
+        {errors.email && (
+          <p className="text-xs text-stamp-alert mt-1">{errors.email}</p>
+        )}
       </div>
 
       <div>
@@ -79,20 +107,30 @@ export default function PersonForm({ initial, isEdit = false, onSubmit, onCancel
         <input
           className="field-input font-mono"
           value={values.phoneNumber}
-          onChange={(e) => set('phoneNumber', e.target.value)}
+          onChange={(e) => set("phoneNumber", e.target.value)}
           placeholder="10 dígitos"
         />
-        {errors.phoneNumber && <p className="text-xs text-stamp-alert mt-1">{errors.phoneNumber}</p>}
+        {errors.phoneNumber && (
+          <p className="text-xs text-stamp-alert mt-1">{errors.phoneNumber}</p>
+        )}
       </div>
 
       <div className="flex gap-3 pt-2">
-        <button type="submit" disabled={submitting} className="btn-primary flex-1">
-          {submitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Registrar persona'}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="btn-primary flex-1"
+        >
+          {submitting
+            ? "Guardando…"
+            : isEdit
+              ? "Guardar cambios"
+              : "Registrar persona"}
         </button>
         <button type="button" onClick={onCancel} className="btn-secondary">
           Cancelar
         </button>
       </div>
     </form>
-  )
+  );
 }
