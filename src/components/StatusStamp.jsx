@@ -6,5 +6,5 @@ export default function StatusStamp({ active }) {
     </span>
   ) : (
     <span className="stamp-closed">Finalizada</span>
-  )
+  );
 }

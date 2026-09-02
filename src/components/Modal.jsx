@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
 export default function Modal({ title, onClose, children }) {
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onClose])
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-ink/40 backdrop-blur-[2px] p-0 sm:p-4">
@@ -27,5 +27,5 @@ export default function Modal({ title, onClose, children }) {
         <div className="p-5">{children}</div>
       </div>
     </div>
-  )
+  );
 }

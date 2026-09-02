@@ -1,29 +1,29 @@
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useState } from "react";
 
-const ToastContext = createContext(null)
+const ToastContext = createContext(null);
 
-let idCounter = 0
+let idCounter = 0;
 
 export function ToastProvider({ children }) {
-  const [toasts, setToasts] = useState([])
+  const [toasts, setToasts] = useState([]);
 
   const dismiss = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-  }, [])
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   const push = useCallback(
-    (message, variant = 'ok') => {
-      const id = ++idCounter
-      setToasts((prev) => [...prev, { id, message, variant }])
-      setTimeout(() => dismiss(id), 4200)
+    (message, variant = "ok") => {
+      const id = ++idCounter;
+      setToasts((prev) => [...prev, { id, message, variant }]);
+      setTimeout(() => dismiss(id), 4200);
     },
     [dismiss],
-  )
+  );
 
   const value = {
-    success: (msg) => push(msg, 'ok'),
-    error: (msg) => push(msg, 'error'),
-  }
+    success: (msg) => push(msg, "ok"),
+    error: (msg) => push(msg, "error"),
+  };
 
   return (
     <ToastContext.Provider value={value}>
@@ -34,9 +34,9 @@ export function ToastProvider({ children }) {
             key={t.id}
             role="status"
             className={`rounded-md border px-4 py-3 text-sm font-medium shadow-lg animate-[fadeIn_.15s_ease-out] ${
-              t.variant === 'error'
-                ? 'bg-stamp-alertSoft border-stamp-alert text-stamp-alert'
-                : 'bg-stamp-activeSoft border-stamp-active text-stamp-active'
+              t.variant === "error"
+                ? "bg-stamp-alertSoft border-stamp-alert text-stamp-alert"
+                : "bg-stamp-activeSoft border-stamp-active text-stamp-active"
             }`}
           >
             {t.message}
@@ -44,11 +44,11 @@ export function ToastProvider({ children }) {
         ))}
       </div>
     </ToastContext.Provider>
-  )
+  );
 }
 
 export function useToast() {
-  const ctx = useContext(ToastContext)
-  if (!ctx) throw new Error('useToast debe usarse dentro de <ToastProvider>')
-  return ctx
+  const ctx = useContext(ToastContext);
+  if (!ctx) throw new Error("useToast debe usarse dentro de <ToastProvider>");
+  return ctx;
 }

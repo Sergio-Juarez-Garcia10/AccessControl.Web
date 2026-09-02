@@ -1,73 +1,78 @@
-import { useEffect, useState } from 'react'
-import { visitsApi } from '../api/visits'
-import CodeActionForm from '../components/CodeActionForm'
-import VisitTable from '../components/VisitTable'
-import EmptyState from '../components/EmptyState'
-import { useToast } from '../components/Toast'
+import { useEffect, useState } from "react";
+import { visitsApi } from "../api/visits";
+import CodeActionForm from "../components/CodeActionForm";
+import VisitTable from "../components/VisitTable";
+import EmptyState from "../components/EmptyState";
+import { useToast } from "../components/Toast";
 
 const TABS = [
-  { id: 'active', label: 'Activas' },
-  { id: 'all', label: 'Todas' },
-]
+  { id: "active", label: "Activas" },
+  { id: "all", label: "Todas" },
+];
 
 export default function VisitsPage() {
-  const toast = useToast()
-  const [tab, setTab] = useState('active')
-  const [active, setActive] = useState([])
-  const [all, setAll] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [entrySubmitting, setEntrySubmitting] = useState(false)
-  const [exitSubmitting, setExitSubmitting] = useState(false)
+  const toast = useToast();
+  const [tab, setTab] = useState("active");
+  const [active, setActive] = useState([]);
+  const [all, setAll] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [entrySubmitting, setEntrySubmitting] = useState(false);
+  const [exitSubmitting, setExitSubmitting] = useState(false);
 
   async function load() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const [activeVisits, allVisits] = await Promise.all([visitsApi.getActive(), visitsApi.getAll()])
-      setActive(activeVisits)
-      setAll(allVisits)
+      const [activeVisits, allVisits] = await Promise.all([
+        visitsApi.getActive(),
+        visitsApi.getAll(),
+      ]);
+      setActive(activeVisits);
+      setAll(allVisits);
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    load()
-  }, [])
+    load();
+  }, []);
 
   async function handleEntry(code) {
-    setEntrySubmitting(true)
+    setEntrySubmitting(true);
     try {
-      await visitsApi.registerEntry({ code })
-      toast.success(`Entrada registrada para el código ${code}`)
-      load()
+      await visitsApi.registerEntry({ code });
+      toast.success(`Entrada registrada para el código ${code}`);
+      load();
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setEntrySubmitting(false)
+      setEntrySubmitting(false);
     }
   }
 
   async function handleExit(code) {
-    setExitSubmitting(true)
+    setExitSubmitting(true);
     try {
-      await visitsApi.registerExit({ code })
-      toast.success(`Salida registrada para el código ${code}`)
-      load()
+      await visitsApi.registerExit({ code });
+      toast.success(`Salida registrada para el código ${code}`);
+      load();
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setExitSubmitting(false)
+      setExitSubmitting(false);
     }
   }
 
-  const list = tab === 'active' ? active : all
+  const list = tab === "active" ? active : all;
 
   return (
     <div className="space-y-6">
       <div>
-        <p className="font-mono text-xs tracking-widest text-ink-soft uppercase">Registro de movimientos</p>
+        <p className="font-mono text-xs tracking-widest text-ink-soft uppercase">
+          Registro de movimientos
+        </p>
         <h1 className="text-2xl font-semibold text-ink mt-1">Visitas</h1>
       </div>
 
@@ -101,10 +106,13 @@ export default function VisitsPage() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`px-3.5 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${
-                tab === t.id ? 'border-ink text-ink' : 'border-transparent text-ink-soft hover:text-ink'
+                tab === t.id
+                  ? "border-ink text-ink"
+                  : "border-transparent text-ink-soft hover:text-ink"
               }`}
             >
-              {t.label} {t.id === 'active' && !loading ? `(${active.length})` : ''}
+              {t.label}{" "}
+              {t.id === "active" && !loading ? `(${active.length})` : ""}
             </button>
           ))}
         </div>
@@ -113,7 +121,11 @@ export default function VisitsPage() {
           <p className="text-sm text-ink-soft">Cargando…</p>
         ) : list.length === 0 ? (
           <EmptyState
-            title={tab === 'active' ? 'No hay visitas activas' : 'Aún no hay visitas registradas'}
+            title={
+              tab === "active"
+                ? "No hay visitas activas"
+                : "Aún no hay visitas registradas"
+            }
             description="Usa los campos de arriba para registrar una entrada."
           />
         ) : (
@@ -121,5 +133,5 @@ export default function VisitsPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

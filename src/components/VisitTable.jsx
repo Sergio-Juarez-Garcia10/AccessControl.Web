@@ -1,5 +1,5 @@
-import StatusStamp from './StatusStamp'
-import { formatDateTime, formatDuration } from '../utils/format'
+import StatusStamp from "./StatusStamp";
+import { formatDateTime, formatDuration } from "../utils/format";
 
 export default function VisitTable({ visits, showPerson = true }) {
   return (
@@ -17,18 +17,33 @@ export default function VisitTable({ visits, showPerson = true }) {
         </thead>
         <tbody>
           {visits.map((v) => (
-            <tr key={v.id} className="border-b border-paper-line last:border-0 hover:bg-white/40">
+            <tr
+              key={v.id}
+              className="border-b border-paper-line last:border-0 hover:bg-white/40"
+            >
               {showPerson && (
                 <td className="px-4 py-3">
                   <span className="font-medium text-ink">
-                    {v.person ? `${v.person.firstName} ${v.person.lastName}` : '—'}
+                    {v.person
+                      ? `${v.person.firstName} ${v.person.lastName}`
+                      : "—"}
                   </span>
-                  {v.person?.code && <span className="ml-2 font-mono text-xs text-ink-soft">{v.person.code}</span>}
+                  {v.person?.code && (
+                    <span className="ml-2 font-mono text-xs text-ink-soft">
+                      {v.person.code}
+                    </span>
+                  )}
                 </td>
               )}
-              <td className="px-4 py-3 font-mono text-ink-light">{formatDateTime(v.entryTime)}</td>
-              <td className="px-4 py-3 font-mono text-ink-light">{formatDateTime(v.exitTime)}</td>
-              <td className="px-4 py-3 text-ink-soft">{formatDuration(v.entryTime, v.exitTime)}</td>
+              <td className="px-4 py-3 font-mono text-ink-light">
+                {formatDateTime(v.entryTime)}
+              </td>
+              <td className="px-4 py-3 font-mono text-ink-light">
+                {formatDateTime(v.exitTime)}
+              </td>
+              <td className="px-4 py-3 text-ink-soft">
+                {formatDuration(v.entryTime, v.exitTime)}
+              </td>
               <td className="px-4 py-3">
                 <StatusStamp active={!v.exitTime} />
               </td>
@@ -45,9 +60,15 @@ export default function VisitTable({ visits, showPerson = true }) {
               {showPerson ? (
                 <div className="min-w-0">
                   <p className="font-medium text-ink truncate">
-                    {v.person ? `${v.person.firstName} ${v.person.lastName}` : '—'}
+                    {v.person
+                      ? `${v.person.firstName} ${v.person.lastName}`
+                      : "—"}
                   </p>
-                  {v.person?.code && <p className="font-mono text-xs text-ink-soft">{v.person.code}</p>}
+                  {v.person?.code && (
+                    <p className="font-mono text-xs text-ink-soft">
+                      {v.person.code}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <span />
@@ -59,10 +80,12 @@ export default function VisitTable({ visits, showPerson = true }) {
               <span className="dot-leader" />
               <span>{formatDateTime(v.exitTime)}</span>
             </div>
-            <p className="text-xs text-ink-soft mt-1">Duración: {formatDuration(v.entryTime, v.exitTime)}</p>
+            <p className="text-xs text-ink-soft mt-1">
+              Duración: {formatDuration(v.entryTime, v.exitTime)}
+            </p>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }

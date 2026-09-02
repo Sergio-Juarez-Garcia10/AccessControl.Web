@@ -1,86 +1,86 @@
-import { useEffect, useMemo, useState } from 'react'
-import { personsApi } from '../api/persons'
-import PersonForm from '../components/PersonForm'
-import PersonTable from '../components/PersonTable'
-import EmptyState from '../components/EmptyState'
-import Modal from '../components/Modal'
-import { useToast } from '../components/Toast'
+import { useEffect, useMemo, useState } from "react";
+import { personsApi } from "../api/persons";
+import PersonForm from "../components/PersonForm";
+import PersonTable from "../components/PersonTable";
+import EmptyState from "../components/EmptyState";
+import Modal from "../components/Modal";
+import { useToast } from "../components/Toast";
 
 export default function PersonsPage() {
-  const toast = useToast()
-  const [persons, setPersons] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [query, setQuery] = useState('')
-  const [modal, setModal] = useState(null) // 'create' | { edit: person } | { delete: person }
-  const [submitting, setSubmitting] = useState(false)
+  const toast = useToast();
+  const [persons, setPersons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [modal, setModal] = useState(null); // 'create' | { edit: person } | { delete: person }
+  const [submitting, setSubmitting] = useState(false);
 
   async function load() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const data = await personsApi.getAll()
-      setPersons(data)
+      const data = await personsApi.getAll();
+      setPersons(data);
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    load()
-  }, [])
+    load();
+  }, []);
 
   const filtered = useMemo(() => {
-    if (!query.trim()) return persons
-    const q = query.trim().toLowerCase()
+    if (!query.trim()) return persons;
+    const q = query.trim().toLowerCase();
     return persons.filter(
       (p) =>
         p.code.toLowerCase().includes(q) ||
         p.firstName.toLowerCase().includes(q) ||
         p.lastName.toLowerCase().includes(q) ||
         p.email.toLowerCase().includes(q),
-    )
-  }, [persons, query])
+    );
+  }, [persons, query]);
 
   async function handleCreate(values) {
-    setSubmitting(true)
+    setSubmitting(true);
     try {
-      await personsApi.create(values)
-      toast.success('Persona registrada correctamente')
-      setModal(null)
-      load()
+      await personsApi.create(values);
+      toast.success("Persona registrada correctamente");
+      setModal(null);
+      load();
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
   async function handleUpdate(id, values) {
-    setSubmitting(true)
+    setSubmitting(true);
     try {
-      await personsApi.update(id, values)
-      toast.success('Datos actualizados')
-      setModal(null)
-      load()
+      await personsApi.update(id, values);
+      toast.success("Datos actualizados");
+      setModal(null);
+      load();
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
   async function handleDelete(person) {
-    setSubmitting(true)
+    setSubmitting(true);
     try {
-      await personsApi.remove(person.id)
-      toast.success('Persona eliminada')
-      setModal(null)
-      load()
+      await personsApi.remove(person.id);
+      toast.success("Persona eliminada");
+      setModal(null);
+      load();
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -88,10 +88,12 @@ export default function PersonsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <p className="font-mono text-xs tracking-widest text-ink-soft uppercase">Directorio</p>
+          <p className="font-mono text-xs tracking-widest text-ink-soft uppercase">
+            Directorio
+          </p>
           <h1 className="text-2xl font-semibold text-ink mt-1">Personas</h1>
         </div>
-        <button onClick={() => setModal('create')} className="btn-primary">
+        <button onClick={() => setModal("create")} className="btn-primary">
           + Nueva persona
         </button>
       </div>
@@ -107,8 +109,12 @@ export default function PersonsPage() {
         <p className="text-sm text-ink-soft">Cargando…</p>
       ) : filtered.length === 0 ? (
         <EmptyState
-          title={query ? 'Sin resultados' : 'Aún no hay personas registradas'}
-          description={query ? 'Prueba con otro término de búsqueda.' : 'Registra la primera persona para comenzar.'}
+          title={query ? "Sin resultados" : "Aún no hay personas registradas"}
+          description={
+            query
+              ? "Prueba con otro término de búsqueda."
+              : "Registra la primera persona para comenzar."
+          }
         />
       ) : (
         <PersonTable
@@ -118,9 +124,13 @@ export default function PersonsPage() {
         />
       )}
 
-      {modal === 'create' && (
+      {modal === "create" && (
         <Modal title="Registrar persona" onClose={() => setModal(null)}>
-          <PersonForm onSubmit={handleCreate} onCancel={() => setModal(null)} submitting={submitting} />
+          <PersonForm
+            onSubmit={handleCreate}
+            onCancel={() => setModal(null)}
+            submitting={submitting}
+          />
         </Modal>
       )}
 
@@ -139,8 +149,11 @@ export default function PersonsPage() {
       {modal?.delete && (
         <Modal title="Eliminar persona" onClose={() => setModal(null)}>
           <p className="text-sm text-ink-soft mb-5">
-            ¿Eliminar a <span className="font-semibold text-ink">{modal.delete.firstName} {modal.delete.lastName}</span>?
-            Esta acción no se puede deshacer.
+            ¿Eliminar a{" "}
+            <span className="font-semibold text-ink">
+              {modal.delete.firstName} {modal.delete.lastName}
+            </span>
+            ? Esta acción no se puede deshacer.
           </p>
           <div className="flex gap-3">
             <button
@@ -148,7 +161,7 @@ export default function PersonsPage() {
               disabled={submitting}
               onClick={() => handleDelete(modal.delete)}
             >
-              {submitting ? 'Eliminando…' : 'Sí, eliminar'}
+              {submitting ? "Eliminando…" : "Sí, eliminar"}
             </button>
             <button className="btn-secondary" onClick={() => setModal(null)}>
               Cancelar
@@ -157,5 +170,5 @@ export default function PersonsPage() {
         </Modal>
       )}
     </div>
-  )
+  );
 }
